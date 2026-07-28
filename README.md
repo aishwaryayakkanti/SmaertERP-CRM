@@ -36,25 +36,29 @@ graph TD
 SmartERP-CRM/
 ├── backend/                  # REST API backend server files
 │   ├── src/
-│   │   ├── config/db.ts      # Database connection pooling
-│   │   ├── controllers/      # Route logic handlers
-│   │   ├── middleware/       # Auth guards & role check filters
-│   │   ├── models/           # SQL query models
-│   │   └── routes/           # REST endpoints
-│   ├── .env                  # Port, DB, JWT variables
+│   │   ├── config/
+│   │   │   └── db.ts         # Database connection pooling
+│   │   ├── controllers/      # Route controllers (Auth, Employee, Leave, Attendance, Dashboard)
+│   │   ├── middleware/       # JWT Auth verification & RBAC check filters
+│   │   ├── models/           # PostgreSQL client queries
+│   │   └── routes/           # Express endpoint routers
+│   ├── .env                  # Environment configs (Port, Database, JWT)
+│   ├── tsconfig.json         # TypeScript configuration
 │   └── package.json          # Node modules manifest
 ├── frontend/                 # Client UI application files
 │   ├── src/
-│   │   ├── components/       # Layouts, Sidebar, Navbar, ProtectedRoute
-│   │   ├── pages/            # View pages (Login, Dashboard, Employees...)
-│   │   ├── services/api.ts   # Axios instance & JWT header interceptors
-│   │   └── index.css         # Typography & dark/light theme properties
+│   │   ├── components/       # Layout wrapper, Navbar, Sidebar navigation, ProtectedRoute
+│   │   ├── pages/            # View pages (Login, Dashboard, Employees, Attendance, Leave, Payroll, Profile)
+│   │   ├── services/
+│   │   │   └── api.ts        # Axios client instance & header request interceptors
+│   │   ├── App.css           # Styling rules for layout components
+│   │   ├── App.tsx           # Router declarations
+│   │   ├── index.css         # Design system styling parameters
+│   │   └── main.tsx          # DOM node mount injection
+│   ├── tsconfig.json         # TypeScript compiler configurations
 │   └── package.json          # Vite packaging manifest
 ├── .gitignore                # Global ignore lists
-├── PROJECT_EXPLANATION.md    # Master full-project documentation
-├── BACKEND_DOCUMENTATION.md  # Detailed backend database/API document
-├── FRONTEND_DOCUMENTATION.md # Detailed frontend layout/page document
-└── README.md                 # Main repository entry file (this file)
+└── README.md                 # Main repository entry file
 ```
 
 ---
@@ -62,7 +66,9 @@ SmartERP-CRM/
 ## ⚙️ Setup and Execution Guide
 
 ### 1. Database Setup
-Ensure **PostgreSQL** is running. Construct a database named `smart_erp` and initialize the tables using the SQL schemas documented in [BACKEND_DOCUMENTATION.md](./BACKEND_DOCUMENTATION.md).
+1. Ensure **PostgreSQL** service is active.
+2. Initialize a database named `smart_erp`.
+3. Construct the necessary tables (`users`, `employees`, `attendance`, `leave_requests`) by executing the query definitions.
 
 ### 2. Backend Installation & Start
 1. Navigate to the backend directory:
@@ -79,9 +85,9 @@ Ensure **PostgreSQL** is running. Construct a database named `smart_erp` and ini
    DB_HOST=localhost
    DB_PORT=5432
    DB_USER=postgres
-   DB_PASSWORD=yourpassword
+   DB_PASSWORD=your_database_password
    DB_NAME=smart_erp
-   JWT_SECRET=yourjwtsecretkey
+   JWT_SECRET=your_jwt_secret_key
    ```
 4. Start the backend server:
    ```bash
@@ -110,10 +116,10 @@ Ensure **PostgreSQL** is running. Construct a database named `smart_erp` and ini
 
 ---
 
-## 🔒 Test Credentials
-To run a test dashboard session, use the default seeded account:
-* **Login Email**: `aish@gmail.com`
-* **Password**: `aish123`
+## 🔒 Access Credentials
+To sign in to the administrative console:
+* **Lookup Credentials**: Access accounts directly in the PostgreSQL `users` table. 
+* **Custom Accounts**: You can insert custom administrator or employee profiles inside the database (with passwords securely encrypted using `bcrypt`).
 
 ---
 *SmartERP-CRM development team.*
