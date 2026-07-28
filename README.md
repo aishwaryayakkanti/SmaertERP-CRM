@@ -60,22 +60,23 @@ graph LR
 * **Data Tier**: Relational PostgreSQL database ensuring strict data validation and relational constraints.
 
 ---
-
 ## 📦 Technology Stack
 
-### Frontend Client
-* **UI Framework**: React 19.2.7
-* **Build Pipeline**: Vite 8.1.1 (ES Modules build engine)
-* **Routing Engine**: React Router Dom v7.18.1
-* **API Client**: Axios v1.18.1 (with request interceptor)
-* **Styling**: Vanilla CSS (CSS variables, variables-based dark/light theme switching)
+Here are the main tools and technologies used to build this project:
 
-### Backend REST API
-* **Runtime**: Node.js & Express v5.2.1
-* **Type System**: TypeScript v5.9.2
-* **Hashing**: Bcrypt v6.0.0
-* **Tokens**: jsonwebtoken v9.0.3
-* **SQL Driver**: pg (node-postgres v8.22.0)
+* **Frontend (User Interface)**:
+  * **React 19** & **TypeScript** - For building a fast, interactive user interface.
+  * **Vite** - To compile and run the frontend application quickly.
+  * **Axios** - To send requests to the backend server.
+  * **Vanilla CSS** - For beautiful, responsive styling and theme switches.
+
+* **Backend (Server & API)**:
+  * **Node.js** & **Express.js** - For creating the backend server API.
+  * **JWT (JSON Web Tokens)** - For secure user login sessions.
+  * **Bcrypt** - To encrypt passwords securely in the database.
+
+* **Database**:
+  * **PostgreSQL** - To store all users, employees, shifts, and leave records.
 
 ---
 
