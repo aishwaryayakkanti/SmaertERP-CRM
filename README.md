@@ -1,72 +1,170 @@
-# SmartERP-CRM
+# 💼 SmartERP-CRM: Enterprise Resource & Customer Relations Manager
 
-SmartERP-CRM is a secure, responsive, enterprise-grade resource management panel designed to manage company employees, payroll, attendance checks, and leave requests. 
+SmartERP-CRM is a secure, responsive, enterprise-grade resource management dashboard designed to manage employee directories, daily shifts, attendance checks, and leave requests. 
 
-This repository houses both the backend API server and the frontend client SPA.
+This repository houses the entire codebase, including the **RESTful Express API backend** and the **React 19 client SPA**.
+
+---
+
+## 📖 Table of Contents
+1. [Key Features](#-key-features)
+2. [System Architecture](#-system-architecture)
+3. [Technology Stack](#-technology-stack)
+4. [Repository Directory Structure](#-repository-directory-structure)
+5. [Database SQL Schema Setup](#-database-sql-schema-setup)
+6. [Quick Start & Setup Guide](#-quick-start--setup-guide)
+7. [Authentication & Credentials](#-authentication--credentials)
+
+---
+
+## 🌟 Key Features
+
+### 🔑 Authentication & Authorization
+* **Secure Sessions**: Token-based authentication using **JSON Web Tokens (JWT)**.
+* **Role-Based Access Control (RBAC)**: Distinct permissions for `admin` and `employee` roles enforced across frontend views and backend REST controllers.
+
+### 👥 Employee Management (Admin Only)
+* **Full CRUD Operations**: Register, modify, list, and terminate employee records.
+* **Roster Control**: Store employee details including name, contact email, primary department, role, and salary metrics.
+
+### 📅 Attendance Tracker
+* **Real-time Logging**: Record daily attendance check-ins and check-outs.
+* **Status Flags**: Automatically tag shift records as *Present*, *Absent*, *Late*, or *Half Day*.
+
+### 📝 Leave Request Processing
+* **Application Filing**: Employees can submit time-off requests with specified dates and descriptions.
+* **Approval Pipeline**: Administrators can review, approve, or reject pending requests.
+
+### 💰 Payroll & Payslip Advisor
+* **Calculations**: Automatically computes standard withholding tax deductions (15%) and welfare benefits against basic base pay.
+* **Payslip Generator**: Displays and prints a detailed, itemized monthly pay advice.
 
 ---
 
 ## 🚀 System Architecture
 
-The application is built on a **three-tier client-server architecture**:
+The application is built on a robust **three-tier client-server architecture**:
 
-**React 19 Frontend SPA** ➔ **Node/Express + TypeScript Backend** ➔ **PostgreSQL Database**
+```mermaid
+graph LR
+    A["React 19 Frontend SPA"] -->| "HTTP Requests + JWT" | B["Express REST API"]
+    B -->| "Raw SQL Queries" | C[("PostgreSQL Database")]
+    
+    style A fill:#a93bff,stroke:#fff,stroke-width:2px,color:#fff
+    style B fill:#16171d,stroke:#fff,stroke-width:2px,color:#fff
+    style C fill:#2e303a,stroke:#fff,stroke-width:2px,color:#fff
+```
 
-* **Frontend**: React 19 Single Page Application compiled with Vite 8 and typed with TypeScript.
-* **Backend**: Express REST API running on Node.js using TypeScript.
-* **Database**: PostgreSQL relational storage.
+* **Presentation Tier**: Single Page Application (SPA) utilizing concurrent rendering for smooth UI transitions.
+* **Application Tier**: RESTful backend managing routing, database queries, and middleware pipelines.
+* **Data Tier**: Relational PostgreSQL database ensuring strict data validation and relational constraints.
 
 ---
 
-## 📦 Tech Stack
+## 📦 Technology Stack
 
-* **Frontend UI**: React 19, TypeScript, Vite 8, React Router Dom v7, Axios, Vanilla CSS.
-* **Backend REST API**: Node.js, Express, TypeScript, Pg (Connection Pooling Driver).
-* **Security & Auth**: JWT (jsonwebtoken), Bcrypt (Password Hashing), Role-Based Access Control (RBAC).
+### Frontend Client
+* **UI Framework**: React 19.2.7
+* **Build Pipeline**: Vite 8.1.1 (ES Modules build engine)
+* **Routing Engine**: React Router Dom v7.18.1
+* **API Client**: Axios v1.18.1 (with request interceptor)
+* **Styling**: Vanilla CSS (CSS variables, variables-based dark/light theme switching)
+
+### Backend REST API
+* **Runtime**: Node.js & Express v5.2.1
+* **Type System**: TypeScript v5.9.2
+* **Hashing**: Bcrypt v6.0.0
+* **Tokens**: jsonwebtoken v9.0.3
+* **SQL Driver**: pg (node-postgres v8.22.0)
 
 ---
 
-## 📂 Repository Structure
+## 📂 Repository Directory Structure
 
 ```text
 SmartERP-CRM/
-├── backend/                  # REST API backend server files
+├── backend/                  # REST API backend server folder
 │   ├── src/
 │   │   ├── config/
-│   │   │   └── db.ts         # Database connection pooling
+│   │   │   └── db.ts         # PostgreSQL database pooler configuration
 │   │   ├── controllers/      # Route controllers (Auth, Employee, Leave, Attendance, Dashboard)
 │   │   ├── middleware/       # JWT Auth verification & RBAC check filters
-│   │   ├── models/           # PostgreSQL client queries
+│   │   ├── models/           # Parameterized SQL database queries
 │   │   └── routes/           # Express endpoint routers
 │   ├── .env                  # Environment configs (Port, Database, JWT)
-│   ├── tsconfig.json         # TypeScript configuration
-│   └── package.json          # Node modules manifest
-├── frontend/                 # Client UI application files
+│   ├── tsconfig.json         # TypeScript compiler configurations
+│   └── package.json          # Backend dependencies manifest
+├── frontend/                 # Client UI application folder
 │   ├── src/
 │   │   ├── components/       # Layout wrapper, Navbar, Sidebar navigation, ProtectedRoute
 │   │   ├── pages/            # View pages (Login, Dashboard, Employees, Attendance, Leave, Payroll, Profile)
 │   │   ├── services/
 │   │   │   └── api.ts        # Axios client instance & header request interceptors
-│   │   ├── App.css           # Styling rules for layout components
+│   │   ├── App.css           # Layout components styling rules
 │   │   ├── App.tsx           # Router declarations
-│   │   ├── index.css         # Design system styling parameters
-│   │   └── main.tsx          # DOM node mount injection
-│   ├── tsconfig.json         # TypeScript compiler configurations
-│   └── package.json          # Vite packaging manifest
-├── .gitignore                # Global ignore lists
-└── README.md                 # Main repository entry file
+│   │   ├── index.css         # Styling system & dark mode preference config
+│   │   └── main.tsx          # DOM root mount injection
+│   ├── tsconfig.json         # TypeScript configurations
+│   └── package.json          # Frontend packages manifest
+├── .gitignore                # Global ignore list
+└── README.md                 # Master project documentation
 ```
 
 ---
 
-## ⚙️ Setup and Execution Guide
+## 🗄️ Database SQL Schema Setup
 
-### 1. Database Setup
-1. Ensure **PostgreSQL** service is active.
-2. Initialize a database named `smart_erp`.
-3. Construct the necessary tables (`users`, `employees`, `attendance`, `leave_requests`) by executing the query definitions.
+Create a database named `smart_erp` in PostgreSQL, and execute the following DDL statements to set up the tables:
 
-### 2. Backend Installation & Start
+```sql
+-- Users Table (Authentication profiles)
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'employee' CHECK (role IN ('admin', 'employee'))
+);
+
+-- Employees Table (HR Records)
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    position VARCHAR(100) NOT NULL,
+    salary DECIMAL(12, 2) NOT NULL
+);
+
+-- Attendance Table (Daily logs)
+CREATE TABLE attendance (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    attendance_date DATE NOT NULL,
+    check_in TIME NOT NULL,
+    check_out TIME,
+    status VARCHAR(50) DEFAULT 'Present' CHECK (status IN ('Present', 'Absent', 'Late', 'Half Day')),
+    UNIQUE (employee_id, attendance_date)
+);
+
+-- Leave Requests Table (Time-Off Tracking)
+CREATE TABLE leave_requests (
+    id SERIAL PRIMARY KEY,
+    employee_id INT NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+    leave_type VARCHAR(100) NOT NULL CHECK (leave_type IN ('Annual', 'Sick', 'Maternity/Paternity', 'Unpaid')),
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reason TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected')),
+    CHECK (start_date <= end_date)
+);
+```
+
+---
+
+## ⚙️ Quick Start & Setup Guide
+
+### 1. Backend Server Setup
 1. Navigate to the backend directory:
    ```bash
    cd backend
@@ -81,41 +179,37 @@ SmartERP-CRM/
    DB_HOST=localhost
    DB_PORT=5432
    DB_USER=postgres
-   DB_PASSWORD=your_database_password
+   DB_PASSWORD=your_postgres_password
    DB_NAME=smart_erp
-   JWT_SECRET=your_jwt_secret_key
+   JWT_SECRET=your_secret_key
    ```
-4. Start the backend server:
+4. Start the server:
    ```bash
    npm run dev
    ```
-   *The server starts listening on `http://localhost:5000` once database connection is confirmed.*
 
-### 3. Frontend Installation & Start
+### 2. Frontend Client Setup
 1. Navigate to the frontend directory:
    ```bash
    cd frontend
    ```
-2. Install package dependencies:
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Start the Vite local development server:
+3. Launch the development server:
    ```bash
    npm run dev
    ```
-   *The client dashboard will be available at `http://localhost:5173/` (or `http://localhost:5174/` if 5173 is occupied).*
-4. Compile static assets for production deployment:
-   ```bash
-   npm run build
-   ```
+   *The console will open the client panel at `http://localhost:5173/`.*
 
 ---
 
-## 🔒 Access Credentials
-To sign in to the administrative console:
-* **Lookup Credentials**: Access accounts directly in the PostgreSQL `users` table. 
-* **Custom Accounts**: You can insert custom administrator or employee profiles inside the database (with passwords securely encrypted using `bcrypt`).
+## 🔒 Authentication & Credentials
+
+To ensure system security, plaintext credentials are not committed to the repository:
+* **Account Access**: Please inspect the `users` table inside your local PostgreSQL database to retrieve active user credentials.
+* **Creating Profiles**: You can register custom admin or employee profiles using the signup routes or insert statements. Ensure all passwords are securely hashed using `bcrypt` (10 salt rounds) before insertion.
 
 ---
 *SmartERP-CRM development team.*
