@@ -19,47 +19,57 @@ function Navbar() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "15px 30px",
+        padding: "20px 40px",
         borderBottom: "1px solid var(--border)",
-        backgroundColor: "var(--bg)",
+        backgroundColor: "var(--bg-card)",
         boxSizing: "border-box",
       }}
     >
       <div>
-        <h2 style={{ margin: 0, fontSize: "1.2rem", color: "var(--accent)" }}>
-          SmartERP CRM Console
-        </h2>
+        <h3 style={{ margin: 0, color: "var(--text-h)", fontWeight: 700 }}>
+          Dashboard Console
+        </h3>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontWeight: 600, color: "var(--text-h)", fontSize: "0.95rem" }}>
-            {userName}
+      <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+        {/* User profile identifier */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "10px",
+              backgroundColor: "var(--primary-bg)",
+              color: "var(--primary)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              border: "1px solid var(--primary-border)",
+            }}
+          >
+            {userName.charAt(0).toUpperCase()}
           </div>
-          <div style={{ fontSize: "0.8rem", color: "var(--text)", textTransform: "capitalize" }}>
-            {userRole}
+          <div style={{ textAlign: "left" }}>
+            <div style={{ fontWeight: 700, color: "var(--text-h)", fontSize: "0.95rem", lineHeight: "1.2" }}>
+              {userName}
+            </div>
+            <div style={{ fontSize: "0.8rem", color: "var(--text)", textTransform: "uppercase", fontWeight: 700, letterSpacing: "0.05em", marginTop: "2px" }}>
+              {userRole}
+            </div>
           </div>
         </div>
 
+        {/* Separator line */}
+        <div style={{ width: "1px", height: "24px", backgroundColor: "var(--border)" }}></div>
+
         <button
           onClick={handleLogout}
+          className="btn-secondary"
           style={{
             padding: "8px 16px",
             fontSize: "0.85rem",
-            backgroundColor: "transparent",
-            color: "var(--text-h)",
-            border: "1px solid var(--border)",
-            borderRadius: "6px",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "var(--accent)";
-            e.currentTarget.style.color = "var(--accent)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "var(--border)";
-            e.currentTarget.style.color = "var(--text-h)";
           }}
         >
           Logout

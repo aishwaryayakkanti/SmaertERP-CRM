@@ -32,7 +32,6 @@ function Attendance() {
   const fetchLogsAndEmployees = async () => {
     try {
       setLoading(true);
-      // Fetch both logs and employees lists in parallel
       const [logsRes, empRes] = await Promise.all([
         api.get("/attendance"),
         api.get("/employees"),
@@ -41,7 +40,6 @@ function Attendance() {
       const employeesList: Employee[] = empRes.data.employees || [];
       setEmployees(employeesList);
 
-      // Map employee names to attendance logs
       const rawLogs: AttendanceRecord[] = logsRes.data.attendance || [];
       const mappedLogs = rawLogs.map((log) => {
         const emp = employeesList.find((e) => e.id === log.employee_id);
@@ -87,47 +85,33 @@ function Attendance() {
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>Attendance Registry</h1>
+    <div className="fade-in" style={{ padding: "10px 20px" }}>
+      <div className="page-header">
+        <div>
+          <h1 style={{ margin: 0 }}>Attendance Registry</h1>
+          <p style={{ color: "var(--text)", marginTop: "4px" }}>
+            Track employee shifts, daily logging, and checkout timings.
+          </p>
+        </div>
         {!showAddForm && (
-          <button
-            onClick={() => setShowAddForm(true)}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "var(--accent)",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Log Attendance Check-in
+          <button onClick={() => setShowAddForm(true)} className="btn-primary">
+            <span>📅</span> Log Daily Check-In
           </button>
         )}
       </div>
 
       {showAddForm && (
-        <div
-          style={{
-            padding: "20px",
-            border: "1px solid var(--border)",
-            borderRadius: "10px",
-            backgroundColor: "var(--code-bg)",
-            marginBottom: "30px",
-          }}
-        >
-          <h3 style={{ marginTop: 0, color: "var(--text-h)" }}>Mark Employee Attendance</h3>
+        <div className="glass-card" style={{ marginBottom: "35px", animation: "fadeIn 0.3s ease" }}>
+          <h3 style={{ marginTop: 0, marginBottom: "20px", color: "var(--text-h)" }}>Mark Daily Attendance Sheets</h3>
           <form onSubmit={handleMarkAttendance}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px", marginBottom: "15px" }}>
-              <div>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "0.85rem", fontWeight: 600 }}>Select Employee</label>
+            <div className="form-grid">
+              <div className="form-group">
+                <label className="form-label">Select Employee</label>
                 <select
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
                   required
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-h)" }}
+                  className="form-select"
                 >
                   <option value="">-- Choose Employee --</option>
                   {employees.map((emp) => (
@@ -138,45 +122,45 @@ function Attendance() {
                 </select>
               </div>
 
-              <div>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "0.85rem", fontWeight: 600 }}>Date</label>
+              <div className="form-group">
+                <label className="form-label">Date</label>
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   required
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-h)" }}
+                  className="form-input"
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "0.85rem", fontWeight: 600 }}>Check-In Time</label>
+              <div className="form-group">
+                <label className="form-label">Check-In Time</label>
                 <input
                   type="time"
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   required
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-h)" }}
+                  className="form-input"
                 />
               </div>
 
-              <div>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "0.85rem", fontWeight: 600 }}>Check-Out Time</label>
+              <div className="form-group">
+                <label className="form-label">Check-Out Time</label>
                 <input
                   type="time"
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-h)" }}
+                  className="form-input"
                 />
               </div>
 
-              <div style={{ gridColumn: "span 2" }}>
-                <label style={{ display: "block", marginBottom: "5px", fontSize: "0.85rem", fontWeight: 600 }}>Attendance Status</label>
+              <div className="form-group" style={{ gridColumn: "span 2" }}>
+                <label className="form-label">Shift Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                   required
-                  style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid var(--border)", backgroundColor: "var(--bg)", color: "var(--text-h)" }}
+                  className="form-select"
                 >
                   <option value="Present">Present</option>
                   <option value="Absent">Absent</option>
@@ -186,33 +170,11 @@ function Attendance() {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              <button
-                type="button"
-                onClick={() => setShowAddForm(false)}
-                style={{
-                  padding: "8px 16px",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "transparent",
-                  color: "var(--text-h)",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                }}
-              >
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+              <button type="button" onClick={() => setShowAddForm(false)} className="btn-secondary">
                 Cancel
               </button>
-              <button
-                type="submit"
-                style={{
-                  padding: "8px 16px",
-                  border: "none",
-                  backgroundColor: "var(--accent)",
-                  color: "white",
-                  borderRadius: "6px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
+              <button type="submit" className="btn-primary">
                 Log Entry
               </button>
             </div>
@@ -221,33 +183,35 @@ function Attendance() {
       )}
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "40px" }}>Loading logs...</div>
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text)" }}>Loading logs...</div>
       ) : (
-        <div style={{ overflowX: "auto", border: "1px solid var(--border)", borderRadius: "10px", backgroundColor: "var(--bg)" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+        <div className="table-container">
+          <table className="modern-table">
             <thead>
-              <tr style={{ borderBottom: "1px solid var(--border)", backgroundColor: "var(--code-bg)" }}>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Log ID</th>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Employee Name</th>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Date</th>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Check-In</th>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Check-Out</th>
-                <th style={{ padding: "15px", fontWeight: 600 }}>Status</th>
+              <tr>
+                <th>Log ID</th>
+                <th>Employee Name</th>
+                <th>Date</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {logs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: "30px", textAlign: "center", color: "var(--text)" }}>
-                    No check-in records logged.
+                  <td colSpan={6} style={{ padding: "40px", textAlign: "center", color: "var(--text)" }}>
+                    No check-in logs recorded.
                   </td>
                 </tr>
               ) : (
                 logs.map((log) => (
-                  <tr key={log.id} style={{ borderBottom: "1px solid var(--border)", transition: "background-color 0.2s" }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--code-bg)"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}>
-                    <td style={{ padding: "15px" }}>{log.id}</td>
-                    <td style={{ padding: "15px", fontWeight: 600, color: "var(--text-h)" }}>{log.employee_name}</td>
-                    <td style={{ padding: "15px" }}>
+                  <tr key={log.id}>
+                    <td><strong>#{log.id}</strong></td>
+                    <td>
+                      <div style={{ fontWeight: 700, color: "var(--text-h)" }}>{log.employee_name}</div>
+                    </td>
+                    <td>
                       {new Date(log.attendance_date).toLocaleDateString(undefined, {
                         year: "numeric",
                         month: "long",
@@ -255,31 +219,19 @@ function Attendance() {
                         timeZone: "UTC"
                       })}
                     </td>
-                    <td style={{ padding: "15px", color: "green", fontWeight: 500 }}>{log.check_in}</td>
-                    <td style={{ padding: "15px", color: log.check_out ? "blue" : "gray" }}>
-                      {log.check_out || "Active Shift"}
+                    <td style={{ color: "#2ec4b6", fontWeight: 700 }}>{log.check_in}</td>
+                    <td style={{ fontWeight: 500, color: log.check_out ? "var(--text-h)" : "var(--text)" }}>
+                      {log.check_out || "Active Roster"}
                     </td>
-                    <td style={{ padding: "15px" }}>
+                    <td>
                       <span
-                        style={{
-                          display: "inline-block",
-                          padding: "4px 8px",
-                          borderRadius: "4px",
-                          fontSize: "0.8rem",
-                          fontWeight: 600,
-                          backgroundColor:
-                            log.status === "Present"
-                              ? "rgba(40, 167, 69, 0.15)"
-                              : log.status === "Absent"
-                              ? "rgba(220, 53, 69, 0.15)"
-                              : "rgba(255, 193, 7, 0.15)",
-                          color:
-                            log.status === "Present"
-                              ? "#28a745"
-                              : log.status === "Absent"
-                              ? "#dc3545"
-                              : "#ffc107",
-                        }}
+                        className={`badge ${
+                          log.status === "Present"
+                            ? "badge-success"
+                            : log.status === "Absent"
+                            ? "badge-danger"
+                            : "badge-warning"
+                        }`}
                       >
                         {log.status}
                       </span>

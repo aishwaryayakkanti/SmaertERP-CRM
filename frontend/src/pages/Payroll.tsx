@@ -31,7 +31,6 @@ function Payroll() {
     fetchEmployees();
   }, []);
 
-  // Compute stats
   const calculatePayslip = (annualSalary: number) => {
     const grossMonthly = Math.round(annualSalary / 12);
     const tax = Math.round(grossMonthly * 0.15); // 15% standard tax
@@ -47,36 +46,38 @@ function Payroll() {
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
-      <div style={{ marginBottom: "30px" }}>
-        <h1 style={{ fontSize: "2rem", margin: 0 }}>Payroll Center</h1>
-        <p style={{ color: "var(--text)", marginTop: "5px" }}>
-          Compute compensations, view structures, and print generated payslips.
-        </p>
+    <div className="fade-in" style={{ padding: "10px 20px" }}>
+      <div className="page-header">
+        <div>
+          <h1 style={{ margin: 0 }}>Payroll Center</h1>
+          <p style={{ color: "var(--text)", marginTop: "4px" }}>
+            Compute employee compensation scales, tax withholdings, and print generated advices.
+          </p>
+        </div>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "40px" }}>Loading payroll data...</div>
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text)" }}>Loading payroll registers...</div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: selectedEmp ? "1.2fr 1fr" : "1fr", gap: "25px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: selectedEmp ? "1.2fr 1fr" : "1fr", gap: "30px", alignItems: "start" }}>
           
-          {/* Employee Salary Summary list */}
-          <div style={{ overflowX: "auto", border: "1px solid var(--border)", borderRadius: "10px", backgroundColor: "var(--bg)" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+          {/* Employee Salary List */}
+          <div className="table-container">
+            <table className="modern-table">
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--border)", backgroundColor: "var(--code-bg)" }}>
-                  <th style={{ padding: "15px", fontWeight: 600 }}>Name</th>
-                  <th style={{ padding: "15px", fontWeight: 600 }}>Annual Salary</th>
-                  <th style={{ padding: "15px", fontWeight: 600 }}>Monthly Base</th>
-                  <th style={{ padding: "15px", fontWeight: 600 }}>Net Payout</th>
-                  <th style={{ padding: "15px", fontWeight: 600, textAlign: "right" }}>Action</th>
+                <tr>
+                  <th>Employee</th>
+                  <th>Annual Base</th>
+                  <th>Monthly Gross</th>
+                  <th>Net Payout</th>
+                  <th style={{ textAlign: "right" }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {employees.length === 0 ? (
                   <tr>
-                    <td colSpan={5} style={{ padding: "30px", textAlign: "center", color: "var(--text)" }}>
-                      No employee payroll metrics configured.
+                    <td colSpan={5} style={{ padding: "40px", textAlign: "center", color: "var(--text)" }}>
+                      No payroll structures configured.
                     </td>
                   </tr>
                 ) : (
@@ -86,40 +87,26 @@ function Payroll() {
                       <tr
                         key={emp.id}
                         style={{
-                          borderBottom: "1px solid var(--border)",
-                          transition: "background-color 0.2s",
-                          backgroundColor: selectedEmp?.id === emp.id ? "var(--accent-bg)" : "transparent",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (selectedEmp?.id !== emp.id) e.currentTarget.style.backgroundColor = "var(--code-bg)";
-                        }}
-                        onMouseLeave={(e) => {
-                          if (selectedEmp?.id !== emp.id) e.currentTarget.style.backgroundColor = "transparent";
+                          backgroundColor: selectedEmp?.id === emp.id ? "var(--primary-bg)" : "transparent",
                         }}
                       >
                         <td style={{ padding: "15px" }}>
-                          <div style={{ fontWeight: 600, color: "var(--text-h)" }}>{emp.name}</div>
-                          <div style={{ fontSize: "0.8rem", color: "var(--text)" }}>{emp.position}</div>
+                          <div style={{ fontWeight: 700, color: "var(--text-h)" }}>{emp.name}</div>
+                          <div style={{ fontSize: "0.8rem", color: "var(--text)", marginTop: "2px" }}>{emp.position}</div>
                         </td>
-                        <td style={{ padding: "15px" }}>${emp.salary.toLocaleString()}</td>
-                        <td style={{ padding: "15px" }}>${pay.grossMonthly.toLocaleString()}</td>
-                        <td style={{ padding: "15px", fontWeight: 600, color: "var(--accent)" }}>
-                          ${pay.netMonthly.toLocaleString()}
-                        </td>
-                        <td style={{ padding: "15px", textAlign: "right" }}>
+                        <td>${emp.salary.toLocaleString()}</td>
+                        <td>${pay.grossMonthly.toLocaleString()}</td>
+                        <td><strong style={{ color: "var(--primary)" }}>${pay.netMonthly.toLocaleString()}</strong></td>
+                        <td style={{ textAlign: "right" }}>
                           <button
                             onClick={() => setSelectedEmp(emp)}
+                            className="btn-secondary"
                             style={{
                               padding: "6px 12px",
-                              backgroundColor: "transparent",
-                              color: "var(--text-h)",
-                              border: "1px solid var(--border)",
-                              borderRadius: "6px",
-                              cursor: "pointer",
-                              fontWeight: 500,
+                              fontSize: "0.8rem",
                             }}
                           >
-                            View Slip
+                            View payslip
                           </button>
                         </td>
                       </tr>
@@ -130,14 +117,14 @@ function Payroll() {
             </table>
           </div>
 
-          {/* Payslip preview Panel */}
+          {/* Payslip Advice Panel */}
           {selectedEmp && (
             <div
+              className="glass-card scale-up"
               style={{
-                border: "1px solid var(--accent-border)",
-                borderRadius: "10px",
-                padding: "25px",
-                backgroundColor: "var(--bg)",
+                padding: "30px",
+                borderColor: "var(--primary-border)",
+                backgroundColor: "var(--bg-card)",
                 boxShadow: "var(--shadow)",
                 position: "relative",
               }}
@@ -146,80 +133,78 @@ function Payroll() {
                 onClick={() => setSelectedEmp(null)}
                 style={{
                   position: "absolute",
-                  top: "15px",
-                  right: "15px",
+                  top: "20px",
+                  right: "20px",
                   background: "transparent",
                   border: "none",
-                  fontSize: "1.2rem",
+                  fontSize: "1.4rem",
                   cursor: "pointer",
                   color: "var(--text)",
+                  padding: 0,
+                  width: "auto",
                 }}
               >
                 ✕
               </button>
 
-              <div style={{ textAlign: "center", borderBottom: "2px dashed var(--border)", paddingBottom: "20px", marginBottom: "20px" }}>
-                <h3 style={{ margin: 0, color: "var(--text-h)" }}>PAYSLIP ADVICE</h3>
-                <div style={{ fontSize: "0.85rem", color: "var(--text)", marginTop: "4px" }}>
-                  SmartERP CRM Ltd • Monthly Earnings
+              <div className="payslip-dashed-line" style={{ textAlign: "center" }}>
+                <h3 style={{ margin: 0, color: "var(--text-h)", fontSize: "1.1rem", textTransform: "uppercase", letterSpacing: "0.1em" }}>Payslip Advice</h3>
+                <div style={{ fontSize: "0.8rem", color: "var(--text)", marginTop: "6px", fontWeight: 600 }}>
+                  SmartERP CRM Ltd • Monthly Earnings Breakdown
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "0.85rem", marginBottom: "20px" }}>
-                <div><strong>Employee:</strong> {selectedEmp.name}</div>
-                <div><strong>Emp ID:</strong> #{selectedEmp.id}</div>
-                <div><strong>Position:</strong> {selectedEmp.position}</div>
-                <div><strong>Department:</strong> {selectedEmp.department}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", fontSize: "0.85rem", marginBottom: "25px" }}>
+                <div><span style={{ color: "var(--text)" }}>Employee:</span> <strong style={{ color: "var(--text-h)" }}>{selectedEmp.name}</strong></div>
+                <div><span style={{ color: "var(--text)" }}>Roster ID:</span> <strong style={{ color: "var(--text-h)" }}>#{selectedEmp.id}</strong></div>
+                <div><span style={{ color: "var(--text)" }}>Position:</span> <strong style={{ color: "var(--text-h)" }}>{selectedEmp.position}</strong></div>
+                <div><span style={{ color: "var(--text)" }}>Dept:</span> <strong style={{ color: "var(--text-h)" }}>{selectedEmp.department}</strong></div>
               </div>
 
-              {/* Computations Table */}
-              <div style={{ fontSize: "0.9rem", marginBottom: "20px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border)" }}>
-                  <span>Basic Base Salary (Monthly)</span>
-                  <strong>${calculatePayslip(selectedEmp.salary).grossMonthly.toLocaleString()}</strong>
+              {/* Computations Table list */}
+              <div style={{ fontSize: "0.95rem", marginBottom: "25px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
+                  <span style={{ color: "var(--text)" }}>Basic Salary (Monthly Gross)</span>
+                  <strong style={{ color: "var(--text-h)" }}>${calculatePayslip(selectedEmp.salary).grossMonthly.toLocaleString()}</strong>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border)", color: "#dc3545" }}>
-                  <span>Withholding Income Tax (15%)</span>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--border)", color: "var(--danger)" }}>
+                  <span>Income Tax Withholding (15%)</span>
                   <span>-${calculatePayslip(selectedEmp.salary).tax.toLocaleString()}</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border)", color: "#dc3545" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--border)", color: "var(--danger)" }}>
                   <span>Medical Welfare Deduction</span>
                   <span>-${calculatePayslip(selectedEmp.salary).benefits.toLocaleString()}</span>
                 </div>
               </div>
 
+              {/* Net disbursed payout */}
               <div
                 style={{
-                  backgroundColor: "var(--code-bg)",
-                  padding: "15px",
-                  borderRadius: "8px",
+                  backgroundColor: "var(--primary-bg)",
+                  padding: "18px 24px",
+                  borderRadius: "12px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  border: "1px solid var(--border)",
+                  border: "1px solid var(--primary-border)",
                 }}
               >
-                <span style={{ fontWeight: 600, color: "var(--text-h)" }}>NET DISBURSED AMOUNT</span>
-                <strong style={{ fontSize: "1.3rem", color: "var(--accent)" }}>
+                <span style={{ fontWeight: 700, color: "var(--text-h)", fontSize: "0.85rem" }}>NET DISBURSED AMOUNT</span>
+                <strong style={{ fontSize: "1.4rem", color: "var(--primary)", fontWeight: 800 }}>
                   ${calculatePayslip(selectedEmp.salary).netMonthly.toLocaleString()}
                 </strong>
               </div>
 
-              <div style={{ marginTop: "25px", textAlign: "center" }}>
+              <div style={{ marginTop: "25px" }}>
                 <button
-                  onClick={() => alert("Printing Payslip...")}
+                  onClick={() => alert("Dispatching print job...")}
+                  className="btn-primary"
                   style={{
-                    padding: "10px 20px",
                     width: "100%",
-                    backgroundColor: "var(--accent)",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    fontWeight: 600,
-                    cursor: "pointer",
+                    padding: "12px",
                   }}
                 >
-                  Print Payslip Advice
+                  🖨️ Print Payslip Advice
                 </button>
               </div>
 
