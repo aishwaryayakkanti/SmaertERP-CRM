@@ -28,7 +28,7 @@ function Leave() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
-  const [showApplyForm, setShowApplyForm] = useState(false);
+  const [showApplyModal, setShowApplyModal] = useState(false);
 
   const userRole = localStorage.getItem("userRole") || "";
   const isAdmin = userRole.toLowerCase() === "admin";
@@ -111,7 +111,7 @@ function Leave() {
     setStartDate("");
     setEndDate("");
     setReason("");
-    setShowApplyForm(false);
+    setShowApplyModal(false);
   };
 
   return (
@@ -120,30 +120,61 @@ function Leave() {
         <div>
           <h1 style={{ margin: 0 }}>Leave Management</h1>
           <p style={{ color: "var(--text)", marginTop: "4px" }}>
-            Review, file, and audit employee vacation time requests.
+            File vacation requests, monitor balances, and review approvals.
           </p>
         </div>
-        {!showApplyForm && (
-          <button onClick={() => setShowApplyForm(true)} className="btn-primary">
-            <span>📝</span> Apply for Time-Off
-          </button>
-        )}
+        <button onClick={() => setShowApplyModal(true)} className="btn-primary">
+          <span>📝</span> Apply for Leave
+        </button>
       </div>
 
-      {showApplyForm && (
-        <div className="glass-card" style={{ marginBottom: "35px", animation: "fadeIn 0.3s ease" }}>
-          <h3 style={{ marginTop: 0, marginBottom: "20px", color: "var(--text-h)" }}>Submit Leave Application</h3>
-          <form onSubmit={handleApplyLeave}>
-            <div className="form-grid">
+      {/* Leave Balance Counters */}
+      <div className="dashboard-grid" style={{ marginBottom: "24px" }}>
+        <div className="glass-card stat-card primary" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+          <div>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text)" }}>Annual Balance</span>
+            <h2 style={{ fontSize: "1.6rem", marginTop: "4px" }}>24 Days</h2>
+          </div>
+          <span style={{ fontSize: "1.4rem" }}>🌴</span>
+        </div>
+        <div className="glass-card stat-card success" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+          <div>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text)" }}>Sick Leaves</span>
+            <h2 style={{ fontSize: "1.6rem", marginTop: "4px" }}>12 Days</h2>
+          </div>
+          <span style={{ fontSize: "1.4rem" }}>🩹</span>
+        </div>
+        <div className="glass-card stat-card warning" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+          <div>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text)" }}>Maternity Leave</span>
+            <h2 style={{ fontSize: "1.6rem", marginTop: "4px" }}>90 Days</h2>
+          </div>
+          <span style={{ fontSize: "1.4rem" }}>👶</span>
+        </div>
+        <div className="glass-card stat-card danger" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px" }}>
+          <div>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text)" }}>Unpaid Balance</span>
+            <h2 style={{ fontSize: "1.6rem", marginTop: "4px" }}>Unlimited</h2>
+          </div>
+          <span style={{ fontSize: "1.4rem" }}>💳</span>
+        </div>
+      </div>
+
+      {/* Leave Request Dialog Modal */}
+      {showApplyModal && (
+        <div className="modal-overlay">
+          <div className="modal-sheet scale-up">
+            <h3 style={{ marginTop: 0, marginBottom: "20px" }}>File Leave Application</h3>
+            <form onSubmit={handleApplyLeave}>
               <div className="form-group">
-                <label className="form-label">Employee Name</label>
+                <label className="form-label">Employee</label>
                 <select
                   value={employeeId}
                   onChange={(e) => setEmployeeId(e.target.value)}
                   required
                   className="form-select"
                 >
-                  <option value="">-- Select Employee --</option>
+                  <option value="">-- Choose Profile --</option>
                   {employees.map((emp) => (
                     <option key={emp.id} value={emp.id}>
                       {emp.name} (ID: {emp.id})
@@ -153,7 +184,7 @@ function Leave() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Leave Type</label>
+                <label className="form-label">Leave Category</label>
                 <select
                   value={leaveType}
                   onChange={(e) => setLeaveType(e.target.value)}
@@ -189,34 +220,35 @@ function Leave() {
                 />
               </div>
 
-              <div className="form-group" style={{ gridColumn: "span 2" }}>
-                <label className="form-label">Reason / Description</label>
+              <div className="form-group" style={{ marginBottom: "24px" }}>
+                <label className="form-label">Reason / Justification</label>
                 <textarea
-                  placeholder="Provide details explaining the time-off request..."
+                  placeholder="Explain details for request..."
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   required
                   rows={3}
                   className="form-input"
-                  style={{ resize: "vertical", boxSizing: "border-box" }}
+                  style={{ resize: "vertical" }}
                 />
               </div>
-            </div>
 
-            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
-              <button type="button" onClick={resetForm} className="btn-secondary">
-                Cancel
-              </button>
-              <button type="submit" className="btn-primary">
-                File Request
-              </button>
-            </div>
-          </form>
+              <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+                <button type="button" onClick={resetForm} className="btn-secondary">
+                  Cancel
+                </button>
+                <button type="submit" className="btn-primary">
+                  Submit Request
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
+      {/* Roster Table List */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "40px", color: "var(--text)" }}>Loading applications...</div>
+        <div style={{ textAlign: "center", padding: "40px", color: "var(--text)" }}>Loading filings...</div>
       ) : (
         <div className="table-container">
           <table className="modern-table">
@@ -225,7 +257,7 @@ function Leave() {
                 <th>Req ID</th>
                 <th>Employee Name</th>
                 <th>Leave Type</th>
-                <th>Dates</th>
+                <th>Duration Dates</th>
                 <th>Reason</th>
                 <th>Status</th>
                 {isAdmin && <th style={{ textAlign: "right" }}>Actions</th>}
@@ -235,7 +267,7 @@ function Leave() {
               {leaves.length === 0 ? (
                 <tr>
                   <td colSpan={isAdmin ? 7 : 6} style={{ padding: "40px", textAlign: "center", color: "var(--text)" }}>
-                    No leave requests listed.
+                    No leave requests filed.
                   </td>
                 </tr>
               ) : (
@@ -247,14 +279,10 @@ function Leave() {
                     </td>
                     <td>{leave.leave_type}</td>
                     <td style={{ fontSize: "0.85rem", lineHeight: "1.4" }}>
-                      <div>
-                        <strong>From:</strong> {new Date(leave.start_date).toLocaleDateString(undefined, { timeZone: "UTC" })}
-                      </div>
-                      <div>
-                        <strong>To:</strong> {new Date(leave.end_date).toLocaleDateString(undefined, { timeZone: "UTC" })}
-                      </div>
+                      <div><strong>From:</strong> {new Date(leave.start_date).toLocaleDateString(undefined, { timeZone: "UTC" })}</div>
+                      <div><strong>To:</strong> {new Date(leave.end_date).toLocaleDateString(undefined, { timeZone: "UTC" })}</div>
                     </td>
-                    <td style={{ maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={leave.reason}>
+                    <td style={{ maxWidth: "200px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={leave.reason}>
                       {leave.reason}
                     </td>
                     <td>
@@ -282,7 +310,6 @@ function Leave() {
                                 padding: "6px 12px",
                                 fontSize: "0.8rem",
                                 backgroundColor: "var(--success)",
-                                color: "white",
                               }}
                             >
                               Approve
