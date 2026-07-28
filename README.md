@@ -10,11 +10,7 @@ This repository houses both the backend API server and the frontend client SPA.
 
 The application is built on a **three-tier client-server architecture**:
 
-```mermaid
-graph TD
-    A[React 19 Frontend SPA] -- HTTP Requests + JWT -- > B[Node/Express + TypeScript Backend]
-    B -- Raw SQL Queries -- > C[PostgreSQL Database]
-```
+**React 19 Frontend SPA** ➔ **Node/Express + TypeScript Backend** ➔ **PostgreSQL Database**
 
 * **Frontend**: React 19 Single Page Application compiled with Vite 8 and typed with TypeScript.
 * **Backend**: Express REST API running on Node.js using TypeScript.
