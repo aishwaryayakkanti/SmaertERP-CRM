@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: smarterp-crm-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_HOST
+        fromDatabase:
+          name: smarterp-db
+          property: host
+      - key: DB_PORT
+        value: 5432
+      - key: DB_USER
+        fromDatabase:
+          name: smarterp-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: smarterp-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: smarterp-db
+          property: database
+
+databases:
+  - name: smarterp-db
+    plan: free
